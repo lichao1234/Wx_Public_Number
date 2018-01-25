@@ -23,6 +23,10 @@ class Weixin extends Model
 				$info     = sprintf($template, $toUser, $fromUser, $time, $msgType, $content);
 				echo $info;
 			}
+			// 取消关注事件
+			if( strtolower($postObj->Event == 'unsubscribe') ){
+				// 此处写你自己的业务逻辑
+			}
 		}
 		if(strtolower($postObj->MsgType) == 'text'){
 			$toUser   = $postObj->FromUserName;
@@ -47,7 +51,23 @@ class Weixin extends Model
 				break;
 				case '链接':
 					$content = '<a href="http://www.l73c67.wang/">博客</a>';
-				break;	
+				break;
+				case '天气':
+					$url = 'http://www.sojson.com/open/api/weather/json.shtml?city=北京';
+					$ch = curl_init();
+					curl_setopt($ch,CURLOPT_URL,$url);
+					curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
+					$output = curl_exec($ch);
+					curl_close($ch);
+					$arr = json_decode($output,true);
+					$high_temperature = $arr['data']['forecast'][0]['high'];
+					$low_temperature = $arr['data']['forecast'][0]['low'];
+					$fx = $arr['data']['forecast'][0]['fx'];
+					$fl = $arr['data']['forecast'][0]['fl'];
+					$type = $arr['data']['forecast'][0]['type'];
+					$notice = $arr['data']['forecast'][0]['notice'];
+					$content = '今日'.$high_temperature.'，'.$low_temperature.','.$type.','.$fx.$fl.','.$notice.'';
+				break;
 				// 用户发送图文关键字的时候,回复一个单图文	
 				case '图文':
 					$msgType  =  'news';
@@ -90,6 +110,9 @@ class Weixin extends Model
 					$template .="</Articles>
 								</xml> ";
 					$info = sprintf($template, $toUser, $fromUser, $time, $msgType); 
+				break;
+				default:
+					$content = '听不懂你在说什么';
 				break;
 			}	
 			if(!isset($template)){
