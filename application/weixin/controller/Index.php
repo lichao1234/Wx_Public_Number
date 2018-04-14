@@ -9,7 +9,7 @@ class Index extends Common
     public function index()
     {
 		$nonce = $_GET['nonce'];
-		$token = 'omJNpZEhZeHj1ZxFECKkP48B5VFbk1HP';
+		$token = 'xxxxxx';
 		$timestamp = $_GET['timestamp'];
 		if(isset($_GET['echostr'])){
             $echostr   = $_GET['echostr'];
@@ -90,8 +90,8 @@ class Index extends Common
 			return $_SESSION['access_token'];
 		}else{
 			// 如果access_token不在session中或过期
-			$appid = 'wxcc5fd17ef877309e';
-			$appsecret = '2cf114dd291fcb4b11851917a1298db8';
+			$appid = 'xxxxxxxxxxxx';
+			$appsecret = 'xxxxxxxxxxxxxxx';
 			$url = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid='.$appid.'&secret='.$appsecret.'';
 			$res = $this->http_curl($url,'get','json');
 			$access_token = $res['access_token'];
@@ -187,8 +187,8 @@ class Index extends Common
 		$access_token = $this->getWxAccessToken();
 		// 2.组装数组
 		$postArr = array(
-			'touser' => 'oNl3owbMCSvkJJ9FeSqi5wWBLeOk',
-			'template_id' => 'Qd7nR2_b8rTLdaVe3w6KYzmv9uCQQsDpoC3q9Wjs5_s',
+			'touser' => 'xxxxxxxxxxxxxx',
+			'template_id' => 'xxxxxxxxxxxxxxxxx',
 			'url' => 'http://www.baidu.com',
 			'data' => array(
 				'name' => array('value'=>'hello','color'=>'#173177'),
@@ -207,7 +207,7 @@ class Index extends Common
 	// 网页授权获取用户openid
 	public function getBaseInfo(){
 		// 1.获取到code
-		$appid = 'wxcc5fd17ef877309e';
+		$appid = 'xxxxxxxxxxxxxx';
 		$redirect_uri = urlencode('http://www.l73c67.wang/weixin/index/getUserOpenId');
 		$url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid='.$appid.'&redirect_uri='.$redirect_uri.'&response_type=code&scope=snsapi_base&state=123#wechat_redirect';
 		ob_start();
@@ -219,8 +219,8 @@ class Index extends Common
 	// 基础授权
 	public function getUserOpenId(){
 		// 获取变量
-		$appid = 'wxcc5fd17ef877309e';
-		$appsecret = '2cf114dd291fcb4b11851917a1298db8';
+		$appid = 'xxxxxxxxxxx';
+		$appsecret = 'xxxxxxxxxxxxxx';
 		if(isset($_GET['code'])){
 			$code = $_GET['code'];
         }
@@ -234,7 +234,7 @@ class Index extends Common
 	// 详细授权、
 	public function getUserDetail(){
 		// 1.获取到code
-		$appid = 'wxcc5fd17ef877309e';
+		$appid = 'xxxxxxxxxxxxxxxx';
 		$redirect_uri = urlencode('http://www.l73c67.wang/weixin/index/getUserInfo');
 		$url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid='.$appid.'&redirect_uri='.$redirect_uri.'&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect';
 		ob_start();
@@ -246,8 +246,8 @@ class Index extends Common
 	// 获取用户详细信息
 	public function getUserInfo(){
 		// 获取变量
-		$appid = 'wxcc5fd17ef877309e';
-		$appsecret = '2cf114dd291fcb4b11851917a1298db8';
+		$appid = 'xxxxxxxxxxxxxx';
+		$appsecret = 'xxxxxxxxxxxxxxxxxxx';
 		if(isset($_GET['code'])){
 			$code = $_GET['code'];
         }
