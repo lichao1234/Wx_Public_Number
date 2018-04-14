@@ -8,24 +8,28 @@ class Weixin extends Model
 			//如果是关注 subscribe 事件
 			if( strtolower($postObj->Event == 'subscribe') ){
 				//回复用户消息(纯文本格式)	
-				$toUser   = $postObj->FromUserName;
-				$fromUser = $postObj->ToUserName;
-				$time     = time();
-				$msgType  =  'text';
 				$content  = '欢迎关注我们的微信公众账号'.$postObj->FromUserName.'-'.$postObj->ToUserName;
-				$template = "<xml>
-							<ToUserName><![CDATA[%s]]></ToUserName>
-							<FromUserName><![CDATA[%s]]></FromUserName>
-							<CreateTime>%s</CreateTime>
-							<MsgType><![CDATA[%s]]></MsgType>
-							<Content><![CDATA[%s]]></Content>
-							</xml>";
-				$info     = sprintf($template, $toUser, $fromUser, $time, $msgType, $content);
-				echo $info;
+				$this->reponseText($postObj,$content);
 			}
 			// 取消关注事件
 			if( strtolower($postObj->Event == 'unsubscribe') ){
 				// 此处写你自己的业务逻辑
+			}
+			// 单击事件
+			if(strtolower($postObj->Event == 'CLICK')){
+				if(strtolower($postObj->EventKey == 'item1')){
+					$content  = '这是item1';
+					$this->reponseText($postObj,$content);
+				}
+				if(strtolower($postObj->EventKey == 'item2')){
+					$content  = '这是item2';
+					$this->reponseText($postObj,$content);
+				}
+			}
+			// 跳转事件
+			if(strtolower($postObj->Event == 'VIEW')){
+				$content  = '跳转链接是'.$postObj->EventKey;
+				$this->reponseText($postObj,$content);
 			}
 		}
 		if(strtolower($postObj->MsgType) == 'text'){
@@ -53,7 +57,7 @@ class Weixin extends Model
 					$content = '<a href="http://www.l73c67.wang/">博客</a>';
 				break;
 				case '天气':
-					$url = 'http://www.sojson.com/open/api/weather/json.shtml?city=北京';
+					$url = 'https://www.sojson.com/open/api/weather/json.shtml?city=北京';
 					$ch = curl_init();
 					curl_setopt($ch,CURLOPT_URL,$url);
 					curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
@@ -66,7 +70,7 @@ class Weixin extends Model
 					$fl = $arr['data']['forecast'][0]['fl'];
 					$type = $arr['data']['forecast'][0]['type'];
 					$notice = $arr['data']['forecast'][0]['notice'];
-					$content = '今日'.$high_temperature.'，'.$low_temperature.','.$type.','.$fx.$fl.','.$notice.'';
+					$content = '今日天气'.$high_temperature.','.$low_temperature.','.$type.','.$fx.$fl.','.$notice.'';
 				break;
 				// 用户发送图文关键字的时候,回复一个单图文	
 				case '图文':
@@ -128,5 +132,20 @@ class Weixin extends Model
 			}
 			echo $info;
 		}	
+	}
+	public function reponseText($postObj,$content){
+		$toUser   = $postObj->FromUserName;
+		$fromUser = $postObj->ToUserName;
+		$time     = time();
+		$msgType  =  'text';
+		$template = "<xml>
+					<ToUserName><![CDATA[%s]]></ToUserName>
+					<FromUserName><![CDATA[%s]]></FromUserName>
+					<CreateTime>%s</CreateTime>
+					<MsgType><![CDATA[%s]]></MsgType>
+					<Content><![CDATA[%s]]></Content>
+					</xml>";
+		$info     = sprintf($template, $toUser, $fromUser, $time, $msgType, $content);
+		echo $info;
 	}
 }
